@@ -275,7 +275,7 @@ on : {
 	&lt;&lt;/for&gt;&gt;
 &lt;&lt;/for&gt;&gt;
 
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="5" name="Simulator" tags="" position="292,184" size="100,100">&lt;&lt;if $week gt 10&gt;&gt;&lt;&lt;goto &quot;Conclusion&quot;&gt;&gt;&lt;&lt;/if&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="5" name="Simulator" tags="" position="291,184" size="100,100">&lt;&lt;if $week gt 10&gt;&gt;&lt;&lt;goto &quot;Conclusion&quot;&gt;&gt;&lt;&lt;/if&gt;&gt;
 	&lt;&lt;nobr&gt;&gt;
 	&lt;&lt;set _n to random(2, 10)&gt;&gt;
 	&lt;&lt;set _ambulance = []&gt;&gt;
@@ -299,48 +299,52 @@ on : {
 
 &lt;span id=&quot;button_check&quot;&gt;
 &lt;&lt;button &quot;Continue&quot;&gt;&gt;
+	&lt;&lt;set _error_flag = &quot;FALSE&quot;&gt;&gt;
 	&lt;&lt;set _choices = []&gt;&gt;
 	&lt;&lt;for _i to 1 ; _i lt _n + 1 ; _i++&gt;&gt;
 		&lt;&lt;print &#39;&lt;&lt;set _choice to _choice&#39; + _i + &#39;&gt;&gt;&#39;&gt;&gt;
 		&lt;&lt;if _choice is &quot;SKIP&quot;&gt;&gt;&lt;&lt;set _choices.push(_choice)&gt;&gt;&lt;&lt;continue&gt;&gt;
-		&lt;&lt;elseif _choice is &quot;NONE&quot;&gt;&gt;&lt;&lt;replace &quot;#input-error&quot;&gt;&gt;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;Please select a treatment option for Patient _i&lt;&lt;/replace&gt;&gt;&lt;&lt;break&gt;&gt;&lt;&lt;/if&gt;&gt;
+		&lt;&lt;elseif _choice is &quot;NONE&quot;&gt;&gt;&lt;&lt;set _error_flag to &quot;TRUE&quot;&gt;&gt;&lt;&lt;replace &quot;#input-error&quot;&gt;&gt;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;Please select a treatment option for Patient _i&lt;&lt;/replace&gt;&gt;&lt;&lt;break&gt;&gt;&lt;&lt;/if&gt;&gt;
 		&lt;&lt;set _j to _i - 1&gt;&gt;
 		&lt;&lt;set _safe to $blood_type[_ambulance[_j]][&quot;receives_from&quot;].includes(_choice)&gt;&gt;
 		&lt;&lt;set _choice_name to $blood_type[_choice][&quot;name&quot;]&gt;&gt;
-		&lt;&lt;set _choice_units to $blood_type[_choice][&quot;units&quot;]&gt;&gt;
+		&lt;&lt;set _choice_units to $blood_type[_choice][&quot;units&quot;] - _choices.count(_choice)&gt;&gt;
 		&lt;&lt;if not _safe&gt;&gt;
-			&lt;&lt;replace &quot;#input-error&quot;&gt;&gt;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;It&#39;s not safe to give Patient _i Type _choice_name&lt;&lt;/replace&gt;&gt;
+			&lt;&lt;set _error_flag to &quot;TRUE&quot;&gt;&gt;&lt;&lt;replace &quot;#input-error&quot;&gt;&gt;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;It&#39;s not safe to give Patient _i Type _choice_name&lt;&lt;/replace&gt;&gt;
 			&lt;&lt;break&gt;&gt;
 		&lt;&lt;elseif _choice_units lt 1&gt;&gt;
-			&lt;&lt;replace &quot;#input-error&quot;&gt;&gt;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;You don&#39;t have enough units of blood to give Patient _i Type _choice_name&lt;&lt;/replace&gt;&gt;
+			&lt;&lt;set _error_flag to &quot;TRUE&quot;&gt;&gt;&lt;&lt;replace &quot;#input-error&quot;&gt;&gt;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;You don&#39;t have enough units of blood to give Patient _i Type _choice_name&lt;&lt;/replace&gt;&gt;
 			&lt;&lt;break&gt;&gt;
 		&lt;&lt;else&gt;&gt;
 			&lt;&lt;set _choices.push(_choice)&gt;&gt;
 		&lt;&lt;/if&gt;&gt;
 	&lt;&lt;/for&gt;&gt;
 	
-	&lt;&lt;set _display_text to &quot;&quot;&gt;&gt;
-	&lt;&lt;set _skip_count to _choices.count(&quot;SKIP&quot;)&gt;&gt;
-	&lt;&lt;if _skip_count gt 1&gt;&gt;
-		&lt;&lt;set _display_text to _display_text + &quot;You skipped &quot; + _skip_count + &quot; patients.&quot;&gt;&gt;
-	&lt;&lt;elseif _skip_count gt 0&gt;&gt;
-		&lt;&lt;set _display_text to _display_text + &quot;You skipped &quot; + _skip_count + &quot; patient.&quot;&gt;&gt;
-	&lt;&lt;/if&gt;&gt;
-	&lt;&lt;for _i, _choice range _choices&gt;&gt;
-		&lt;&lt;if _choice is &quot;SKIP&quot;&gt;&gt;&lt;&lt;continue&gt;&gt;&lt;&lt;/if&gt;&gt;
-		&lt;&lt;set $blood_type[_choice][&quot;units&quot;] to $blood_type[_choice][&quot;units&quot;] - 1&gt;&gt;
-	&lt;&lt;/for&gt;&gt;
-	&lt;&lt;replace &quot;#button_check&quot;&gt;&gt;
+	&lt;&lt;if _error_flag is &quot;TRUE&quot;&gt;&gt;
+	&lt;&lt;else&gt;&gt;
+		&lt;&lt;set _display_text to &quot;&quot;&gt;&gt;
+		&lt;&lt;set _skip_count to _choices.count(&quot;SKIP&quot;)&gt;&gt;
+		&lt;&lt;if _skip_count gt 1&gt;&gt;
+			&lt;&lt;set _display_text to _display_text + &quot;You skipped &quot; + _skip_count + &quot; patients.&quot;&gt;&gt;
+		&lt;&lt;elseif _skip_count gt 0&gt;&gt;
+			&lt;&lt;set _display_text to _display_text + &quot;You skipped &quot; + _skip_count + &quot; patient.&quot;&gt;&gt;
+		&lt;&lt;/if&gt;&gt;
+		&lt;&lt;for _i, _choice range _choices&gt;&gt;
+			&lt;&lt;if _choice is &quot;SKIP&quot;&gt;&gt;&lt;&lt;continue&gt;&gt;&lt;&lt;/if&gt;&gt;
+			&lt;&lt;set $blood_type[_choice][&quot;units&quot;] to $blood_type[_choice][&quot;units&quot;] - 1&gt;&gt;
+		&lt;&lt;/for&gt;&gt;
+		&lt;&lt;replace &quot;#button_check&quot;&gt;&gt;
 
-	In your project packet, record your remaining units of blood:
+		In your project packet, record your remaining units of blood:
 	
-	&lt;table border= &quot;1px solid white&quot;&gt;\
-		&lt;tr&gt;&lt;th&gt;Week #&lt;/th&gt;&lt;th&gt;A+&lt;/th&gt;&lt;th&gt;A–&lt;/th&gt;&lt;th&gt;B+&lt;/th&gt;&lt;th&gt;B–&lt;/th&gt;&lt;th&gt;AB+&lt;/th&gt;&lt;th&gt;AB–&lt;/th&gt;&lt;th&gt;O+&lt;/th&gt;&lt;th&gt;O–&lt;/th&gt;&lt;/tr&gt;\
-		&lt;tr&gt;&lt;td&gt;$week&lt;/td&gt;&lt;td&gt;$blood_type.ap.units&lt;/td&gt;&lt;td&gt;$blood_type.an.units&lt;/td&gt;&lt;td&gt;$blood_type.bp.units&lt;/td&gt;&lt;td&gt;$blood_type.bn.units&lt;/td&gt;&lt;td&gt;$blood_type.abp.units&lt;/td&gt;&lt;td&gt;$blood_type.abn.units&lt;/td&gt;&lt;td&gt;$blood_type.op.units&lt;/td&gt;&lt;td&gt;$blood_type.on.units&lt;/td&gt;&lt;/tr&gt;
-	&lt;/table&gt; _display_text
-	&lt;&lt;print &quot;&quot;&gt;&gt;
-	&lt;&lt;button &quot;Next Week&quot; &quot;Simulator&quot;&gt;&gt;&lt;&lt;set $week to $week + 1&gt;&gt;&lt;&lt;/button&gt;&gt;
-	&lt;&lt;/replace&gt;&gt;
+		&lt;table border= &quot;1px solid white&quot;&gt;\
+			&lt;tr&gt;&lt;th&gt;Week #&lt;/th&gt;&lt;th&gt;A+&lt;/th&gt;&lt;th&gt;A–&lt;/th&gt;&lt;th&gt;B+&lt;/th&gt;&lt;th&gt;B–&lt;/th&gt;&lt;th&gt;AB+&lt;/th&gt;&lt;th&gt;AB–&lt;/th&gt;&lt;th&gt;O+&lt;/th&gt;&lt;th&gt;O–&lt;/th&gt;&lt;/tr&gt;\
+			&lt;tr&gt;&lt;td&gt;$week&lt;/td&gt;&lt;td&gt;$blood_type.ap.units&lt;/td&gt;&lt;td&gt;$blood_type.an.units&lt;/td&gt;&lt;td&gt;$blood_type.bp.units&lt;/td&gt;&lt;td&gt;$blood_type.bn.units&lt;/td&gt;&lt;td&gt;$blood_type.abp.units&lt;/td&gt;&lt;td&gt;$blood_type.abn.units&lt;/td&gt;&lt;td&gt;$blood_type.op.units&lt;/td&gt;&lt;td&gt;$blood_type.on.units&lt;/td&gt;&lt;/tr&gt;
+		&lt;/table&gt; _display_text
+		&lt;&lt;print &quot;&quot;&gt;&gt;
+		&lt;&lt;button &quot;Next Week&quot; &quot;Simulator&quot;&gt;&gt;&lt;&lt;set $week to $week + 1&gt;&gt;&lt;&lt;/button&gt;&gt;
+		&lt;&lt;/replace&gt;&gt;
+	&lt;&lt;/if&gt;&gt;
 	
 &lt;&lt;/button&gt;&gt;@@#input-error;@@&lt;/span&gt;</tw-passagedata><tw-passagedata pid="6" name="Widgets" tags="" position="846,130" size="100,100">&lt;&lt;widget &quot;blood_options&quot;&gt;&gt;
 	&lt;&lt;for _type, _data range $blood_type&gt;&gt;\
