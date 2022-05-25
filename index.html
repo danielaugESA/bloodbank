@@ -277,14 +277,20 @@ on : {
 
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="5" name="Simulator" tags="" position="291,184" size="100,100">&lt;&lt;if $week gt 10&gt;&gt;&lt;&lt;goto &quot;Conclusion&quot;&gt;&gt;&lt;&lt;/if&gt;&gt;
 	&lt;&lt;nobr&gt;&gt;
-	&lt;&lt;set _n to random(2, 10)&gt;&gt;
+	&lt;&lt;set _n to random(2, 8)&gt;&gt;
 	&lt;&lt;set _ambulance = []&gt;&gt;
 	&lt;&lt;set _choices = []&gt;&gt;
 	&lt;&lt;/nobr&gt;&gt;
+	Remaining Units of Blood
+	&lt;table border= &quot;1px solid white&quot;&gt;\
+			&lt;tr&gt;&lt;th&gt;Week #&lt;/th&gt;&lt;th&gt;A+&lt;/th&gt;&lt;th&gt;A–&lt;/th&gt;&lt;th&gt;B+&lt;/th&gt;&lt;th&gt;B–&lt;/th&gt;&lt;th&gt;AB+&lt;/th&gt;&lt;th&gt;AB–&lt;/th&gt;&lt;th&gt;O+&lt;/th&gt;&lt;th&gt;O–&lt;/th&gt;&lt;/tr&gt;\
+			&lt;tr&gt;&lt;td&gt;$week&lt;/td&gt;&lt;td&gt;$blood_type.ap.units&lt;/td&gt;&lt;td&gt;$blood_type.an.units&lt;/td&gt;&lt;td&gt;$blood_type.bp.units&lt;/td&gt;&lt;td&gt;$blood_type.bn.units&lt;/td&gt;&lt;td&gt;$blood_type.abp.units&lt;/td&gt;&lt;td&gt;$blood_type.abn.units&lt;/td&gt;&lt;td&gt;$blood_type.op.units&lt;/td&gt;&lt;td&gt;$blood_type.on.units&lt;/td&gt;&lt;/tr&gt;
+		&lt;/table&gt;
+	
 	&lt;&lt;if _n gt 1&gt;&gt;In Week $week, there are _n people who need blood.
 	&lt;&lt;else&gt;&gt;In Week $week, there is _n person who needs blood.&lt;&lt;/if&gt;&gt;
 	
-	How would you like to treat them?
+	How would you like to treat them? (Choose SKIP if you don&#39;t have the right blood to treat someone.)
 	
 
 	&lt;table&gt;
