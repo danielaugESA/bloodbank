@@ -137,7 +137,7 @@ O– &amp;emsp;($350) &amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&lt;&lt;textbox &q
 	&lt;&lt;set _sum to $ap + $an + $bp + $bn + $abp + $abn + $op + $on&gt;&gt;
 	&lt;&lt;set _cost to $ap * 175 + $an * 225 + $bp * 175 + $bn * 225 + $abp * 150 + $abn * 175 + $op * 250 + $on * 350&gt;&gt;
 
-	&lt;&lt;if _sum lt 95 &gt;&gt;
+	&lt;&lt;if _sum lt 90 &gt;&gt;
 		&lt;&lt;replace &quot;#input-error&quot;&gt;&gt;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;Please order more units of blood&lt;&lt;/replace&gt;&gt;
 	&lt;&lt;elseif _cost gt 20000&gt;&gt;
 		&lt;&lt;replace &quot;#input-error&quot;&gt;&gt;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;Your total cost ($ _cost) is more than your budget of $20000&lt;&lt;/replace&gt;&gt;
